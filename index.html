@@ -461,7 +461,7 @@
     text.textContent = 'حور كلين لخدمات تنظيف وغسيل الخزانات الارضية والعلوية بخميس مشيط. تواصل مباشرة وحدد نوع الخزان وموقعه لتنسيق الخدمة.';
   }
 
-  function gtag_report_conversion(url) {
+  function reportGoogleAdsConversion(url, sendTo) {
     var navigated = false;
     var go = function () {
       if (navigated) return;
@@ -473,10 +473,10 @@
 
     try {
       gtag('event', 'conversion', {
-        'send_to': 'AW-18436564167/GMRECJz87fQcEMfJntdE',
+        'send_to': sendTo,
         'event_callback': go
       });
-      // Fallback so WhatsApp still opens if the callback is delayed or blocked.
+      // Fallback so the destination still opens if the callback is delayed or blocked.
       setTimeout(go, 900);
     } catch (e) {
       go();
@@ -484,22 +484,25 @@
     return false;
   }
 
+  // Google Ads: WhatsApp Lead conversion
   document.querySelectorAll('.track-wa').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
-      gtag_report_conversion(this.href);
+      reportGoogleAdsConversion(
+        this.href,
+        'AW-18436564167/GMRECJz87fQcEMfJntdE'
+      );
     });
   });
 
-  // Temporary click event for call buttons. We will replace this with a
-  // dedicated Google Ads conversion once its conversion label is created.
+  // Google Ads: Call Lead conversion
   document.querySelectorAll('.track-call').forEach(function(a){
-    a.addEventListener('click', function(){
-      try {
-        if (typeof gtag === 'function') {
-          gtag('event', 'PhoneCallClick', {event_category:'contact'});
-        }
-      } catch(e) {}
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      reportGoogleAdsConversion(
+        this.href,
+        'AW-18436564167/FQ9nCIz97_QcEMfJntdE'
+      );
     });
   });
 })();
